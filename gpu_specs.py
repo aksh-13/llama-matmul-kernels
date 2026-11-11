@@ -4,6 +4,7 @@ Run directly to print the detected GPU and the spec row in use:
     python gpu_specs.py
 """
 import os
+import re
 from dataclasses import dataclass
 
 
@@ -65,6 +66,11 @@ def spec_for_name(name: str) -> GpuSpec:
         f"No spec row for GPU {name!r}. Add one to SPECS in gpu_specs.py, "
         f"or set GPU_SPEC to one of {sorted(SPECS)}."
     )
+
+
+def slug(name: str) -> str:
+    """Device name as a filename part: 'NVIDIA GeForce RTX 4090' -> 'nvidia_geforce_rtx_4090'."""
+    return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
 
 
 def detect() -> tuple[str, GpuSpec]:
