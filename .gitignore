@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.DS_Store
+# Triton's compiled-kernel cache if redirected into the repo
+.triton/
