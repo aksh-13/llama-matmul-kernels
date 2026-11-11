@@ -106,14 +106,15 @@ def matmul_kernel(
     tl.store(out_ptrs, acc.to(tl.bfloat16), mask=m_mask & n_mask)
 
 
-def matmul(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:
+def launch(x: torch.Tensor, w: torch.Tensor):
+    """Run the kernel; return (out, compiled kernel). dump_ir.py reads the kernel's IR."""
     assert x.dtype == w.dtype == torch.bfloat16 and x.shape[1] == w.shape[0]
     M, K = x.shape
     N = w.shape[1]
     out = torch.empty((M, N), device=x.device, dtype=torch.bfloat16)
     # The grid depends on the block sizes the tuner picks, so it is a function of them.
     grid = lambda meta: (triton.cdiv(M, meta["BLOCK_M"]) * triton.cdiv(N, meta["BLOCK_N"]),)
-    matmul_kernel[grid](
+    compiled = matmul_kernel[grid](
         x, w, out,
         M, N, K,
         x.stride(0), x.stride(1),
@@ -121,7 +122,11 @@ def matmul(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:
         out.stride(0), out.stride(1),
         GROUP_M=GROUP_M,
     )
-    return out
+    return out, compiled
+
+
+def matmul(x: torch.Tensor, w: torch.Tensor) -> torch.Tensor:
+    return launch(x, w)[0]
 
 
 if __name__ == "__main__":
