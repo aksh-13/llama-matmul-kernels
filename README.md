@@ -1,4 +1,4 @@
-# llama-matmul-triton
+# llama-matmul-kernels
 
 A GPU kernel for the largest matrix multiply in Llama-3.1-8B's MLP block, written three times in Triton and twice in Gluon, and measured against `torch.matmul` (cuBLAS) on an RTX 4090 and an H100.
 
