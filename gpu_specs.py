@@ -29,10 +29,23 @@ SPECS = {
         "bf16: ESTIMATE, NVIDIA publishes no tensor-core figure for this card; "
         "4 x the 82.6 TFLOP/s fp32 spec (16384 cores x 2 x 2.52 GHz).",
     ),
+    "rtx5060ti": GpuSpec(
+        "rtx5060ti", 448.0, 94.8,
+        "bandwidth: 128-bit GDDR7 @ 28 Gbps/pin = 448 GB/s. "
+        "bf16: ESTIMATE, NVIDIA publishes no tensor-core figure for this card; "
+        "4 x the 23.7 TFLOP/s fp32 spec (4608 cores x 2 x 2.572 GHz). "
+        "Both inputs are from memory of the spec sheet: check them on the box.",
+    ),
     "h100_sxm": GpuSpec(
         "h100_sxm", 3350.0, 989.5,
         "H100 datasheet: 3.35 TB/s; bf16 listed as 1,979 TFLOP/s *with sparsity*, "
         "dense is half = 989.5.",
+    ),
+    "h100_nvl": GpuSpec(
+        "h100_nvl", 3900.0, 835.5,
+        "H100 NVL (94 GB) datasheet, from memory, check before quoting: 3.9 TB/s; "
+        "bf16 listed as 1,671 TFLOP/s *with sparsity*, dense is half = 835.5. "
+        "Vast's own test measured about 3391 GB/s on the rented card.",
     ),
     "h100_pcie": GpuSpec(
         "h100_pcie", 2000.0, 756.5,
@@ -47,6 +60,8 @@ _NAME_PATTERNS = [
     ("RTX 3090", "rtx3090"),
     ("RTX 4090 D", None),       # export variant with fewer cores: not in table
     ("RTX 4090", "rtx4090"),
+    ("RTX 5060 Ti", "rtx5060ti"),
+    ("H100 NVL", "h100_nvl"),
     ("H100 PCIe", "h100_pcie"),
     ("H100 80GB HBM3", "h100_sxm"),
 ]

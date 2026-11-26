@@ -22,7 +22,10 @@ import torch
 
 from roofline import K, M_VALUES, N
 
-KERNELS = ["v1_basic", "v2_grouped", "v3_autotuned"]
+KERNELS = ["v1_basic", "v2_grouped", "v3_autotuned", "v4_gluon"]
+# v5 uses TMA and wgmma, which only exist on Hopper cards (H100/H200, capability 9.x).
+if torch.cuda.is_available() and torch.cuda.get_device_capability()[0] == 9:
+    KERNELS.append("v5_gluon_hopper")
 RTOL = 2 * 2**-7
 ATOL = 1e-2
 
